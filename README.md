@@ -46,3 +46,7 @@ setup:
 ```
 
 The setup task will now call the `yamlfmt` libraries `install` task.
+
+## Windows
+
+On Windows by default tools get installed in `${HOME}/tools`. Make sure to add this to your path.

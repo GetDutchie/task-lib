@@ -1,0 +1,59 @@
+---
+version: "3"
+
+tasks:
+  install:
+    silent: true
+    vars:
+      MSI: dotnet-sdk-6.0.413-win-x64.exe
+      URL: https://download.visualstudio.microsoft.com/download/pr/8d1443fd-a5e1-438d-8cb8-6ccb9849a54a/4f89f2b74a9c272789dfac8658a87673/dotnet-sdk-6.0.413-win-x64.exe
+      VERSION: "6.0.413"
+      CHECKSUM: d3e8273d451b3bc15cd8f656ffdaaff4d1b0d17059ada578967063f4b9882b74926af61c6e0919f66b5bdeddd66e5047743544ac4768026b60de7a7591e1fab5
+      TEMP_DIR:
+        sh: |
+          powershell '
+            $parent = [System.IO.Path]::GetTempPath()
+            $name = [System.IO.Path]::GetRandomFileName()
+            $path = (Join-Path $parent $name)
+            mkdir $path | Out-Null
+            Write-Output $path
+          '
+    status:
+      - |
+        powershell '
+          $results = dotnet --list-sdks | Select-String "{{.VERSION}}"
+          if ($results -eq $null) {
+            Exit 1
+          }
+        '
+    cmds:
+      - defer: |
+          powershell '
+            Remove-Item -Recurse {{.TEMP_DIR}}
+          '
+      # Download
+      - |
+        powershell '
+          $msi_path = (Join-Path "{{.TEMP_DIR}}" "{{.MSI}}")
+          Write-Output "Downloading to $msi_path"
+          $ProgressPreference = "SilentlyContinue"
+          Invoke-WebRequest -Uri "{{.URL}}" -OutFile $msi_path
+        '
+      # Checksum Verification
+      - |
+        powershell '
+          $msi_path = (Join-Path "{{.TEMP_DIR}}" "{{.MSI}}")
+          Write-Output "Verifying checksum"
+          $FileHash = Get-FileHash $msi_path -Algorithm SHA512
+          if ($FileHash.Hash -ne "{{.CHECKSUM}}") {
+            Write-Output "Checksums don't match, won't install."
+            Exit 1
+          }
+        '
+      # Install
+      - |
+        powershell '
+          $msi_path = (Join-Path "{{.TEMP_DIR}}" "{{.MSI}}")
+          Write-Output "Running installer"
+          Start-Process -FilePath "$msi_path" -Wait
+        '
