@@ -70,4 +70,4 @@ tasks:
                 run: yamlfmt -lint .
     cmds:
       - mkdir -p .github/workflows
-      - echo "{{.CONFIG}}" > .github/workflows/{{.NAME}}.yaml
+      - echo '{{.CONFIG}}' > .github/workflows/{{.NAME}}.yaml
