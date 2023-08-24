@@ -8,8 +8,10 @@ tasks:
     vars:
       TEMP_DIR:
         sh: mktemp -d
+      # YAMLfmt uses x86_64 instead of amd64
+      FIXED_ARCH: '{{if eq ARCH "amd64"}}x86_64{{else}}{{ARCH}}{{end}}'
     cmds:
       - defer: rm -rf {{.TEMP_DIR}}
-      - curl -Lo {{.TEMP_DIR}}/yamlfmt.tar.gz https://github.com/google/yamlfmt/releases/download/v0.9.0/yamlfmt_0.9.0_Darwin_{{ARCH}}.tar.gz
+      - curl -Lo {{.TEMP_DIR}}/yamlfmt.tar.gz https://github.com/google/yamlfmt/releases/download/v0.9.0/yamlfmt_0.9.0_Darwin_{{.FIXED_ARCH}}.tar.gz
       - tar -xvf {{.TEMP_DIR}}/yamlfmt.tar.gz -C {{.TEMP_DIR}}
       - sudo mv {{.TEMP_DIR}}/yamlfmt /usr/local/bin/yamlfmt
