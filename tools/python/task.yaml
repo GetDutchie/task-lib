@@ -17,3 +17,25 @@ tasks:
       - task: os:install
         vars:
           VERSION: "{{.VERSION}}"
+
+  venv:
+    desc: Install a python venv in the venv
+    deps: [pyenv]
+    cmds:
+      - python -m venv "{{.TASKFILE_DIR}}/venv"
+
+  fmt:install:
+    desc: Install isort and black
+    deps: [pyenv, venv]
+    cmds:
+      - pip install black
+      - pip install isort
+
+  fmt:
+    desc: Format python code.
+    deps: [fmt:install]
+    cmds:
+      - source venv/bin/activate &&
+        isort *.py scripts core_services
+      - source venv/bin/activate &&
+        black -l 120 *.py scripts core_services
