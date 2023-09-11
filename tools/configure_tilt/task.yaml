@@ -6,7 +6,6 @@ includes:
 
 tasks:
   install:
-    # TODO: formalize the implied dependency on python / pip
-    desc: Install poetry
+    desc: Setup tilt_config.user.json
     cmds:
       - task: os:install

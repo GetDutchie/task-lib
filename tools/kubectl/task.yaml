@@ -7,5 +7,7 @@ includes:
 tasks:
   install:
     desc: Install kubectl
+    status:
+      - kubectl version --client
     cmds:
       - task: os:install

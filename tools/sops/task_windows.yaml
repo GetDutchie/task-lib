@@ -2,3 +2,9 @@
 version: "3"
 
 tasks:
+  status:
+    cmds:
+      - sops -v
+  install:
+    cmds:
+      - choco install sops

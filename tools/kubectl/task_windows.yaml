@@ -2,3 +2,6 @@
 version: "3"
 
 tasks:
+  install:
+    cmds:
+      - choco install kubernetes-cli

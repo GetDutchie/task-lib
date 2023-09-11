@@ -2,3 +2,12 @@
 version: "3"
 
 tasks:
+  install:
+    status:
+      - | 
+        powershell '
+            ls "C:\Program Files\Rancher Desktop"
+          '
+    cmds:
+      - curl -Lo rd.msi https://github.com/rancher-sandbox/rancher-desktop/releases/download/v1.9.1/Rancher.Desktop.Setup.1.9.1.msi
+      - msiexec /a rd.msi /quiet

@@ -1,0 +1,11 @@
+---
+version: "3"
+
+tasks:
+  install:
+    desc: Setup tilt_config.user.json
+    internal: true
+    cmds:
+      - cp configs/tilt_config.minimal.json configs/tilt_config.user.json
+      - ./helpers/switch_config.sh configs/tilt_config.user.json
+      - "[[ ! -f .env ]] && cp .env.example .env"

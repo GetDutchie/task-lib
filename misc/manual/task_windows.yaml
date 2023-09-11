@@ -2,3 +2,51 @@
 version: "3"
 
 tasks:
+  gum:
+    status:
+      - |
+        powershell '
+          ls gum
+        '
+    cmds:
+      - curl -Lo gum.zip https://github.com/charmbracelet/gum/releases/download/v0.11.0/gum_0.11.0_Windows_x86_64.zip 
+      - |
+        powershell '
+          Expand-Archive gum.zip -DestinationPath gum
+        '
+      - defer: |
+          powershell '
+            Remove-Item -Recurse gum.zip
+          '
+
+  prompt_value:
+    deps: [gum].,
+    requires:
+      vars: [INSTRUCTIONS, OUTPUT_TEMPLATE, OUTPUT_FILE, OUTPUT_APPEND, IS_SECRET]
+    status:
+      - | 
+        powershell '
+          {{if eq .IS_SECRET "true"}}
+            Select-String -Path .\.env -Pattern "^BUNDLE_DUTCHIE__JFROG__IO=.*"
+          {{else}}
+            Select-String -Path .\.env -Pattern "^NPM_CONFIG__AUTH=.*"
+          {{end}}
+        '
+    cmds:
+      - |
+        powershell '
+          $SECRET = gum\gum.exe input {{if eq .IS_SECRET "true"}}--password{{end}} --prompt "{{.INPUT_PROMPT}}" --placeholder "{{.INPUT_PLACEHOLDER}}"
+          $VALUE="{{.OUTPUT_TEMPLATE}}"
+          {{if eq .OUTPUT_APPEND "true"}}
+            echo "$VALUE" >> {{.OUTPUT_FILE}}
+          {{else}}
+            echo "$VALUE" > {{.OUTPUT_FILE}}
+          {{end}}
+        '
+  fetch: 
+    requires:
+      vars: [KEY, FIELDS, OUTPUT]
+    cmds:
+      - echo "{{.KEY}}"
+      - echo "{{.FIELDS}}"
+      - echo "{{.OUTPUT}}"

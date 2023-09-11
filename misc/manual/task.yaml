@@ -42,3 +42,17 @@ tasks:
           OUTPUT_TEMPLATE: "{{.OUTPUT_TEMPLATE}}"
           INPUT_PROMPT: "{{.INPUT_PROMPT}}"
           INPUT_PLACEHOLDER: "{{.INPUT_PLACEHOLDER}}"
+
+  fetch:
+    requires:
+      vars: [INSTRUCTIONS, OUTPUT_FILE]
+    vars:
+      KEY: '{{default "5dehkgocjbdgdptewbugbt72eq" .KEY}}'
+      FIELDS: '{{default "username" .FIELDS}}'
+      OUTPUT: '{{default "username.txt" .OUTPUT}}'
+    cmds:
+      - task: prompt_value
+        vars:
+          KEY: "{{.KEY}}"
+          FIELDS: "{{.FIELDS}}"
+          OUTPUT: "{{.OUTPUT}}"

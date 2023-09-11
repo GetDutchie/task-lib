@@ -2,3 +2,13 @@
 version: "3"
 
 tasks:
+  pyenv:
+    status:
+      - command -v pyenv &>/dev/null
+    cmds:
+      - choco install pyenv-win
+  install:
+    status:
+      - python -v
+    cmds:
+      - choco install python

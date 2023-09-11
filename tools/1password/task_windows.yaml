@@ -2,3 +2,49 @@
 version: "3"
 
 tasks:
+  status:
+    - op -v
+  install:
+    cmds:
+      - choco install 1password-cli
+
+  login:
+    desc: Login to 1Password
+    silent: true
+    status:
+      - op whoami
+    vars:
+      INSTRUCTIONS: |
+        Link the 1Password CLI to your account:
+
+        1. Open and unlock the 1Password app.
+        2. Click your account or collection at the top of the sidebar.
+        3. Navigate to Settings > Developer.
+        4. Select "Connect with 1Password CLI".
+        5. If you want to authenticate 1Password CLI with your fingerprint, turn on Touch ID in the app.
+
+        Full Instructions:
+        https://developer.1password.com/docs/cli/get-started/#step-2-turn-on-the-1password-desktop-app-integration
+    cmds:
+      - |
+        (op signin 2> /dev/null)
+        if [ $? -eq 0 ]; then
+          exit 0
+        fi
+        echo "{{.INSTRUCTIONS}}"
+        read -p "Press enter to continue"
+        echo 1
+        (op signin 2> /dev/null)
+        echo 2
+
+  list:
+    desc: List secrets in 1Password
+    silent: true
+    cmds:
+      - op list
+
+  fetch:
+    desc: Fetch a secret from 1Password
+    silent: true
+    cmds:
+      - op get "{{.KEY}}" --fields "{{.FIELDS}}" > "{{.OUTPUT}}"

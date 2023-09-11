@@ -1,0 +1,9 @@
+---
+version: "3"
+
+tasks:
+  install:
+    status:
+      - pip show poetry &>/dev/null
+    cmds:
+      - pip install poetry

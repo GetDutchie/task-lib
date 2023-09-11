@@ -2,3 +2,9 @@
 version: "3"
 
 tasks:
+  install:
+    status:
+      - poetry --version
+    cmds:
+      - curl https://install.python-poetry.org -o get-poetry.py
+      - python get-poetry.py
