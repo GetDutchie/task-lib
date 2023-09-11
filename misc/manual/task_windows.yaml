@@ -20,29 +20,21 @@ tasks:
           '
 
   prompt_value:
-    deps: [gum].,
+    deps: [gum]
     requires:
       vars: [INSTRUCTIONS, OUTPUT_TEMPLATE, OUTPUT_FILE, OUTPUT_APPEND, IS_SECRET]
-    status:
-      - | 
-        powershell '
-          {{if eq .IS_SECRET "true"}}
-            Select-String -Path .\.env -Pattern "^BUNDLE_DUTCHIE__JFROG__IO=.*"
-          {{else}}
-            Select-String -Path .\.env -Pattern "^NPM_CONFIG__AUTH=.*"
-          {{end}}
-        '
     cmds:
+      - echo "{{.INSTRUCTIONS}}"
       - |
         powershell '
+          $PATTERN = "^{{.OUTPUT_TEMPLATE}}.*"
           $SECRET = gum\gum.exe input {{if eq .IS_SECRET "true"}}--password{{end}} --prompt "{{.INPUT_PROMPT}}" --placeholder "{{.INPUT_PLACEHOLDER}}"
-          $VALUE="{{.OUTPUT_TEMPLATE}}"
-          {{if eq .OUTPUT_APPEND "true"}}
-            echo "$VALUE" >> {{.OUTPUT_FILE}}
-          {{else}}
-            echo "$VALUE" > {{.OUTPUT_FILE}}
-          {{end}}
+          $VALUE = "{{.OUTPUT_TEMPLATE}}"
+          echo $pattern
+          $env = (Get-Content .env) -replace $PATTERN, $VALUE
+          Set-Content -Path .env -Value $env
         '
+
   fetch: 
     requires:
       vars: [KEY, FIELDS, OUTPUT]
