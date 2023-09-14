@@ -6,6 +6,6 @@ tasks:
     # TODO: formalize the implied dependency on python / pip
     desc: Install poetry
     status:
-      - pip show poetry &>/dev/null
+      - python -m pip show poetry &>/dev/null
     cmds:
-      - pip install poetry
+      - python -m pip install poetry

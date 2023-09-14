@@ -1,0 +1,9 @@
+---
+version: "3"
+
+tasks:
+  install:
+    status:
+      - command -v rsync &>/dev/null
+    cmds:
+      - brew install rsync
