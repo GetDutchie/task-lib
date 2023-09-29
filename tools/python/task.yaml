@@ -5,14 +5,8 @@ includes:
   os: ./task_{{OS}}.yaml
 
 tasks:
-  pyenv:
-    desc: Install pyenv
-    cmds:
-      - task: os:pyenv
-
   install:
     desc: Install python version
-    deps: [pyenv]
     cmds:
       - task: os:install
         vars:

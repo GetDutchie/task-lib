@@ -2,33 +2,21 @@
 version: "3"
 
 tasks:
-  pyenv:
-    status:
-      - command -v pyenv &>/dev/null
-    cmds:
-      - brew install pyenv
-
   install:
-    desc: Install python version
     status:
-      - |
-        VERSION="{{.VERSION}}"
-        if [[ -f .python-version ]]; then
-          VERSION=$(cat .python-version)
-        fi
-        pyenv version | grep $VERSION
+      - python3 --version | grep {{.VERSION}}
     vars:
-      GLOBAL: false
+      TEMP_DIR:
+        sh: mktemp -d
+      VERSION: '{{ default "3.11.5" .VERSION }}'
+      # Versions is a space separated map of version to URL
+      VERSIONS: |
+        "3.11.5 https://www.python.org/ftp/python/3.11.5/python-3.11.5-macos11.pkg"
+      URL:
+        sh: echo "{{.VERSIONS}}" | grep {{.VERSION}} | head -n1 | awk '{print $2}'
     cmds:
-      - |
-        if [[ -f .python-version ]]; then
-          pyenv install
-        elif [[ -z "{{.VERSION}}" ]]; then
-          pyenv install {{.VERSION}}
-          {{- if eq .GLOBAL "true"}}
-          pyenv global {{.VERSION}}
-          {{end}}
-        else
-          echo "No .python-version file found, and no version specified"
-          exit 1
-        fi
+      - defer: rm -rf {{.TEMP_DIR}}
+      - '{{if eq .URL ""}}echo "unsupported version: {{.VERSION}}"; exit 1{{end}}'
+      - echo "installing python {{.VERSION}}"
+      - curl -Lo {{.TEMP_DIR}}/python.pkg {{.URL}}
+      - sudo installer -pkg {{.TEMP_DIR}}/python.pkg -target /
