@@ -11,3 +11,10 @@ tasks:
       - task: os:install
         vars:
           VERSION: "{{.VERSION}}"
+
+  install_poetry:
+    desc: Install poetry
+    status:
+      - python3 -m pip show poetry &>/dev/null
+    cmds:
+      - python3 -m pip install poetry

@@ -18,7 +18,6 @@ includes:
   k3d: ./tools/k3d/task.yaml
   node: ./tools/node/task.yaml
   orbstack: ./tools/orbstack/task.yaml
-  poetry: ./tools/poetry/task.yaml
   pulumi: ./tools/pulumi/task.yaml
   python: ./tools/python/task.yaml
   rancher: ./tools/rancher/task.yaml
