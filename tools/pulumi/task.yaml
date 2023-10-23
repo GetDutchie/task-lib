@@ -11,3 +11,13 @@ tasks:
       - pulumi version
     cmds:
       - task: os:install
+
+  preview:
+    desc: Preview pulumi stack
+    cmds:
+      - pulumi preview
+
+  up:
+    desc: Update pulumi stack
+    cmds:
+      - pulumi up {{.CLI_ARGS}}
