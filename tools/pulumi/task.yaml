@@ -21,3 +21,8 @@ tasks:
     desc: Update pulumi stack
     cmds:
       - pulumi up {{.CLI_ARGS}}
+
+  import:
+    desc: Import resources into the pulumi stack
+    cmds:
+      - pulumi import {{.CLI_ARGS}}
