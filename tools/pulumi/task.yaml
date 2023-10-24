@@ -26,3 +26,8 @@ tasks:
     desc: Import resources into the pulumi stack
     cmds:
       - pulumi import {{.CLI_ARGS}}
+
+  refresh:
+    desc: Refresh pulumi stack
+    cmds:
+      - pulumi refresh {{.CLI_ARGS}}
