@@ -11,3 +11,23 @@ tasks:
       - pulumi version
     cmds:
       - task: os:install
+
+  preview:
+    desc: Preview pulumi stack
+    cmds:
+      - pulumi preview
+
+  up:
+    desc: Update pulumi stack
+    cmds:
+      - pulumi up {{.CLI_ARGS}}
+
+  import:
+    desc: Import resources into the pulumi stack
+    cmds:
+      - pulumi import {{.CLI_ARGS}}
+
+  refresh:
+    desc: Refresh pulumi stack
+    cmds:
+      - pulumi refresh {{.CLI_ARGS}}

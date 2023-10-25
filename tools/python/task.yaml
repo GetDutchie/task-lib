@@ -18,3 +18,36 @@ tasks:
       - python3 -m pip show poetry &>/dev/null
     cmds:
       - python3 -m pip install poetry
+
+  init:
+    desc: Initialize poetry in a new project and install common dev dependencies
+    vars:
+      FLAKE8_CONFIG: |
+        [flake8]
+        ignore = E501
+        max-complexity = 10
+        exclude = .git,__pycache__,.venv,.mypy_cache,venv
+        max-line-length = 120
+        per-file-ignores = __init__.py:F401,__main__.py:E402
+    cmds:
+      - echo "{{.FLAKE8_CONFIG}}" > .flake8
+      - |
+        poetry init \
+          --dev-dependency black \
+          --dev-dependency flake8 \
+          --dev-dependency isort
+
+  setup:
+    desc: Initialize project (run poetry install)
+    cmds:
+      - poetry install
+
+  format:
+    - poetry run -- black .
+    - poetry run -- isort .
+
+  lint:
+    - poetry run -- flake8 . --count --statistics
+    - poetry run -- black . --check
+    - poetry run -- isort . --check-only
+
