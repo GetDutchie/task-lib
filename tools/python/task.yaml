@@ -19,7 +19,7 @@ tasks:
     cmds:
       - python3 -m pip install poetry
 
-  init_project:
+  init:
     desc: Initialize poetry in a new project and install common dev dependencies
     vars:
       FLAKE8_CONFIG: |
@@ -37,17 +37,17 @@ tasks:
           --dev-dependency flake8 \
           --dev-dependency isort
 
-  init:
+  setup:
     desc: Initialize project (run poetry install)
     cmds:
       - poetry install
 
   format:
-    - .venv/bin/black .
-    - .venv/bin/isort .
+    - poetry run -- black .
+    - poetry run -- isort .
 
   lint:
-    - .venv/bin/flake8 . --count --statistics
-    - .venv/bin/black . --check
-    - .venv/bin/isort . --check-only
+    - poetry run -- flake8 . --count --statistics
+    - poetry run -- black . --check
+    - poetry run -- isort . --check-only
 
