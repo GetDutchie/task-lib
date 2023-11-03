@@ -44,10 +44,10 @@ tasks:
 
   format:
     - poetry run -- black .
-    - poetry run -- isort .
+    - poetry run -- isort --profile black .
 
   lint:
     - poetry run -- flake8 . --count --statistics
     - poetry run -- black . --check
-    - poetry run -- isort . --check-only
+    - poetry run -- isort . --profile black --check-only
 
